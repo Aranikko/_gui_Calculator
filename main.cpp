@@ -9,32 +9,60 @@ int main() {
     sf::Font font;
     font.loadFromFile("BebasNeue-Regular.ttf");
 
-    sf::RectangleShape rect(sf::Vector2f(100, 100));
-    rect.setPosition(0, window.getSize().y - rect.getSize().y);
-    rect.setFillColor(sf::Color::Transparent);
-
-    sf::RectangleShape box[15];
-    for (int i = 0; i < 15; i++) {
+    sf::RectangleShape box[16];
+    for (int i = 0; i < 16; i++) {
         box[i] = sf::RectangleShape(sf::Vector2f(100, 100));
-        
-        box[i].setPosition(0 + (100 * i), window.getSize().y - rect.getSize().y);
+        box[i].setFillColor(sf::Color::Transparent);
 
-        if (i == 3 || i == 4  || i == 5) { 
-            box[i].setPosition(0 + (100 * (i - 3)), (window.getSize().y - rect.getSize().y )- 100);
-        } else if (i == 6 || i == 8) { 
-            
+        if (i == 15){
+            box[i].setSize(sf::Vector2f(100, 300));
+            box[i].setPosition(0 + (100 * 4), window.getSize().y - 100 - 200);
+        }else if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14) { 
+            box[i].setPosition(0 + (100 * (i - 10)), (window.getSize().y - 100 )- 300);
+        }else if (i == 6 || i == 7 || i == 8 || i == 9) { 
+            box[i].setPosition(0 + (100 * (i - 6)), (window.getSize().y - 100 )- 200);
+        }else if (i == 2 || i == 3 || i == 4 || i == 5){
+            box[i].setPosition(0 + (100 * (i-2)), window.getSize().y - 100 - 100);
+        }else if (i == 0 || i == 1){
+            if (i == 0) {
+                box[i].setSize(sf::Vector2f(300, 100));
+                box[i].setPosition(0 + (100 * i), window.getSize().y - 100);
+            }else{
+                box[i].setPosition(0 + (100 * (i+2)), window.getSize().y - 100);
+            }
         }
         
     }
 
-    sf::Text text;
-    text.setString("0");
-    text.setFont(font);
-    text.setCharacterSize(50);
-    text.setPosition(
-        rect.getPosition().x + rect.getSize().x / 2 - text.getGlobalBounds().width / 2,
-        rect.getPosition().y + rect.getSize().y / 2 - text.getGlobalBounds().height / 2
-    );
+    std::string chars[16] = {"0", "/", "1", "2", "3", "*", "4", "5", "6", "-", "7", "8", "9", "+", "C", "="};
+    sf::Text texts[16];
+    for(int i = 0; i < 16; i++) {
+        
+        texts[i].setFont(font);
+        texts[i].setCharacterSize(50);
+        texts[i].setString(chars[i]);
+
+        if (i == 15){
+            texts[i].setPosition(box[i].getPosition().x + box[i].getSize().x / 2 - texts[i].getGlobalBounds().width /2,
+                                box[i].getPosition().y + box[i].getSize().y / 2.5 + texts[i].getGlobalBounds().height/2);
+        }else if (i == 10 || i == 11 || i == 12 || i == 13 || i == 14) {
+            texts[i].setPosition(box[i].getPosition().x + box[i].getSize().x / 2 - texts[i].getGlobalBounds().width /2,
+                                box[i].getPosition().y + box[i].getSize().y / 5.5 + texts[i].getGlobalBounds().height/2);
+        }else if (i == 6 || i == 7 || i == 8 || i == 9) { 
+            texts[i].setPosition(box[i].getPosition().x + box[i].getSize().x / 2 - texts[i].getGlobalBounds().width /2,
+                                box[i].getPosition().y + box[i].getSize().y / 5.5 + texts[i].getGlobalBounds().height/2);
+        }else if (i == 2 || i == 3 || i == 4 || i == 5){
+            texts[i].setPosition(box[i].getPosition().x + box[i].getSize().x / 2 - texts[i].getGlobalBounds().width /2,
+                                box[i].getPosition().y + box[i].getSize().y / 5.5 + texts[i].getGlobalBounds().height/2);
+        }else if (i == 0 || i == 1){
+            texts[i].setPosition(box[i].getPosition().x + box[i].getSize().x / 2 - texts[i].getGlobalBounds().width /2,
+                                box[i].getPosition().y + box[i].getSize().y / 5.5 + texts[i].getGlobalBounds().height/2);
+        }
+        
+    }
+
+    bool first_input = true;
+    bool second_input = false;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -43,19 +71,25 @@ int main() {
                 window.close();
             }
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (Click_check(mousePos, rect.getGlobalBounds())) {
-                    std::cout << "Left button clicked inside the rectangle!" << std::endl;
+                for(int i = 0; i < 16; i++) {
+                    if (Click_check(mousePos, box[i].getGlobalBounds())) {
+                        
+                    }
                 }
             }
         }
 
         window.clear();
-        for (int i = 0; i < 15; i++) {
+
+        for (int i = 0; i < 16; i++) {
             window.draw(box[i]);
         }
-        window.draw(rect);
-        window.draw(text);
+        for (int i = 0; i < 16; i++) {
+            window.draw(texts[i]);
+        }
+        
         window.display();
     }
 
