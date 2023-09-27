@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
-
 int* array_additional(int* numbers, int& capacity, int& size_current, string &stopChar);
+bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Calculator");
@@ -66,7 +66,11 @@ int main() {
     }
 
     string nums[10] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    string operators[5] = {"+", "-", "*", "/", "="};
+    string operators[6] = {"+", "-", "*", "/", "=", "C"};
+
+    vector<string> entered_chars;
+    sf::Text text_entered;
+    text_entered.setFont(font);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -79,6 +83,22 @@ int main() {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 for(int i = 0; i < 16; i++) {
                     if (Click_check(mousePos, box[i].getGlobalBounds())) {
+                        if(chars[i] == "0" ||
+                           chars[i] == "1" ||
+                           chars[i] == "2" ||
+                           chars[i] == "3" ||
+                           chars[i] == "4" ||
+                           chars[i] =="5"  || 
+                           chars[i] == "6" ||
+                           chars[i] == "7" ||
+                           chars[i] == "8" ||
+                           chars[i] == "9"){ 
+                            
+                            
+
+                            cout << chars[i] << endl;
+
+                        }
                     }
                 }
             }
@@ -105,37 +125,4 @@ bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds) {
     } else {
         return false;
     }
-}
-
-int* array_additional(int* numbers, int& capacity, int& size_current, string &stopChar) {
-    int input;
-    numbers = new int[capacity];
-
-    while (true) {
-        std::cin >> input;
-
-        if (input == stopChar) {
-            break; // Прекращаем ввод, когда введено -1
-        }
-
-        // Проверяем, заполнен ли массив, и изменяем размер при необходимости
-        if (size_current == capacity) {
-            capacity *= 2; // Удваиваем ёмкость
-            int* newNumbers = new int[capacity];
-
-            // Копируем существующие элементы в новый массив
-            for (int i = 0; i < size_current; i++) {
-                newNumbers[i] = numbers[i];
-            }
-
-            // Освобождаем старую память и обновляем указатель
-            delete[] numbers;
-            numbers = newNumbers;
-        }
-
-        // Добавляем введённое число в массив
-        numbers[size_current] = input;
-        size_current++;
-    }
-    return numbers;
 }
