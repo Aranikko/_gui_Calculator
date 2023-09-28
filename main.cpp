@@ -69,8 +69,10 @@ int main() {
     string operators[6] = {"+", "-", "*", "/", "=", "C"};
 
     vector<string> entered_chars;
-    sf::Text text_entered;
+    vector<sf::Text> text_entered;
     text_entered.setFont(font);
+
+    vector<int> solveble;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -88,17 +90,38 @@ int main() {
                            chars[i] == "2" ||
                            chars[i] == "3" ||
                            chars[i] == "4" ||
-                           chars[i] =="5"  || 
+                           chars[i] == "5" || 
                            chars[i] == "6" ||
                            chars[i] == "7" ||
                            chars[i] == "8" ||
                            chars[i] == "9"){ 
                             
-                            
+                            if (entered_chars.size() < 1){
 
-                            cout << chars[i] << endl;
+                                entered_chars.push_back(chars[i]);
+
+                            }else{
+
+                                entered_chars[0] += chars[i];
+
+                            }
+
+                            cout << entered_chars[0] << endl;
+
+                        }else if(chars[i] == "+" ){
+
+                            if (entered_chars.size() < 1 && entered_chars[i-1] != "+" && chars[i+1]!= "+"){
+                            entered_chars.push_back(chars[i]);
+                            }
 
                         }
+
+                        for(int j = 0; j < entered_chars.size(); j++) {
+                            text_entered.setString(entered_chars[i]);
+                        }
+
+
+
                     }
                 }
             }
