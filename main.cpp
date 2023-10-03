@@ -8,7 +8,7 @@ int* array_additional(int* numbers, int& capacity, int& size_current, string &st
 bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Calculator");
+    sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator");
 
     sf::Font font;
     font.loadFromFile("BebasNeue-Regular.ttf");
@@ -69,10 +69,17 @@ int main() {
     string operators[6] = {"+", "-", "*", "/", "=", "C"};
 
     vector<string> entered_chars;
-    vector<sf::Text> text_entered;
+    sf::Text text_entered;
     text_entered.setFont(font);
+    text_entered.setCharacterSize(50);
+    text_entered.setPosition(45, 150);
+    text_entered.setString("0");
 
     vector<int> solveble;
+
+    vector<string> operators_entered;
+
+    string text_entered_str;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -99,25 +106,79 @@ int main() {
                             if (entered_chars.size() < 1){
 
                                 entered_chars.push_back(chars[i]);
+                                text_entered_str += chars[i];
 
                             }else{
+                                    
+                                entered_chars[0+entered_chars.size()-1] += chars[i];
+                                text_entered_str += chars[i];
 
-                                entered_chars[0] += chars[i];
+                            }
+                            text_entered.setString(text_entered_str);
+
+                        }else{
+
+                            if (chars[i] == "C") {
+
+                                entered_chars.clear();
+                                text_entered_str = "";
+                                text_entered.setString("0");
+
+                            }else if (chars[i] == "+") {
+
+                                if (entered_chars.back() != "+" 
+                                && entered_chars.back()!= "-" 
+                                && entered_chars.back()!= "*"
+                                && entered_chars.back()!= "/") {
+
+                                    entered_chars.push_back(chars[i]);
+                                    text_entered_str += " " + chars[i] + " ";
+                                    text_entered.setString(text_entered_str);
+
+                                }
+
+
+                            }else if (chars[i] == "-") {
+
+                                if (entered_chars.back() != "+" 
+                                && entered_chars.back()!= "-" 
+                                && entered_chars.back()!= "*"
+                                && entered_chars.back()!= "/") {
+
+                                    entered_chars.push_back(chars[i]);
+                                    text_entered_str += " " + chars[i] + " ";
+                                    text_entered.setString(text_entered_str);
+
+                                }
+
+                            }else if (chars[i] == "*") {
+
+                                if (entered_chars.back() != "+" 
+                                && entered_chars.back()!= "-" 
+                                && entered_chars.back()!= "*"
+                                && entered_chars.back()!= "/") {
+
+                                    entered_chars.push_back(chars[i]);
+                                    text_entered_str += " " + chars[i] + " ";
+                                    text_entered.setString(text_entered_str);
+
+                                }
+
+                            }else if (chars[i] == "/") {
+
+                                if (entered_chars.back() != "+" 
+                                && entered_chars.back()!= "-" 
+                                && entered_chars.back()!= "*"
+                                && entered_chars.back()!= "/") {
+
+                                    entered_chars.push_back(chars[i]);
+                                    text_entered_str += " " + chars[i] + " ";
+                                    text_entered.setString(text_entered_str);
+
+                                }
 
                             }
 
-                            cout << entered_chars[0] << endl;
-
-                        }else if(chars[i] == "+" ){
-
-                            if (entered_chars.size() < 1 && entered_chars[i-1] != "+" && chars[i+1]!= "+"){
-                            entered_chars.push_back(chars[i]);
-                            }
-
-                        }
-
-                        for(int j = 0; j < entered_chars.size(); j++) {
-                            text_entered.setString(entered_chars[i]);
                         }
 
 
@@ -130,12 +191,15 @@ int main() {
         window.clear();
 
         for (int i = 0; i < 16; i++) {
-            window.draw(box[i]);
-        }
-        for (int i = 0; i < 16; i++) {
             window.draw(texts[i]);
         }
+
+        for (int i = 0; i < 16; i++) {
+            window.draw(box[i]);
+        }
         
+        window.draw(text_entered);
+
         window.display();
     }
 
