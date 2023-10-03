@@ -8,7 +8,7 @@ int* array_additional(int* numbers, int& capacity, int& size_current, string &st
 bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator");
+    sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator", sf::Style::Titlebar | sf::Style::Close);
 
     sf::Font font;
     font.loadFromFile("BebasNeue-Regular.ttf");
@@ -86,8 +86,11 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
-            }
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+            }else if (event.type == sf::Event::Resized){
+
+                window.setSize(sf::Vector2u(500, 600));
+
+            }else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 for(int i = 0; i < 16; i++) {
@@ -186,6 +189,7 @@ int main() {
                     }
                 }
             }
+
         }
 
         window.clear();

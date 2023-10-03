@@ -1,19 +1,31 @@
-#include <iostream>
-#include <vector>
+#include <SFML/Graphics.hpp>
 
-using namespace std;
+int main()
+{
+    // Create a window with the Titlebar and Close buttons (but no Resize button)
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Fixed Size Window", sf::Style::Titlebar | sf::Style::Close);
 
-int main() {
-    vector<int> myVector = {1, 2, 3, 4, 5};
-    
-    // Remove the last element
-    myVector.pop_back();
-    
-    // Display the modified vector
-    for (int num : myVector) {
-        cout << num << " ";
+    // Main loop
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            else if (event.type == sf::Event::Resized)
+            {
+                // If the window is resized, set it back to the fixed size
+                window.setSize(sf::Vector2u(800, 600));
+            }
+        }
+
+        // Your rendering and game logic goes here...
+
+        window.clear();
+        // Draw your objects here...
+        window.display();
     }
-    cout << endl;
-    
+
     return 0;
 }
