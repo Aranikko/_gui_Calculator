@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -106,7 +107,11 @@ int main() {
                            chars[i] == "8" ||
                            chars[i] == "9"){ 
                             
-                            if (entered_chars.size() < 1){
+                            if (entered_chars.size() < 1 
+                            || entered_chars.back() == "+"
+                            || entered_chars.back() == "-"
+                            || entered_chars.back() == "*"
+                            || entered_chars.back() == "/"){
 
                                 entered_chars.push_back(chars[i]);
                                 text_entered_str += chars[i];
@@ -180,6 +185,60 @@ int main() {
 
                                 }
 
+                            }else{
+
+                                int count = 0;
+
+                                for(int j = 0; j < entered_chars.size(); j++){
+
+                                    if(entered_chars[j] == "+" 
+                                    || entered_chars[j] == "-" 
+                                    || entered_chars[j] == "*" 
+                                    || entered_chars[j] == "/"){
+
+                                        count++;
+
+                                    }
+
+                                }
+
+                                for(int j = 0; j < count; j++){
+
+                                    for(int k = 0; k < entered_chars.size(); k++) {
+
+                                        if(entered_chars[k] == "+" ){
+
+                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) + stod(entered_chars[k+1]));
+                                            entered_chars.erase(entered_chars.begin() + 1);
+                                            entered_chars.erase(entered_chars.begin() + 1);
+
+                                        }else if(entered_chars[k] == "-" ){
+
+                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) - stod(entered_chars[k+1]));
+                                            entered_chars.erase(entered_chars.begin() + 1);
+                                            entered_chars.erase(entered_chars.begin() + 1);
+
+                                        }else if(entered_chars[k] == "*" ){
+
+                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) * stod(entered_chars[k+1]));
+                                            entered_chars.erase(entered_chars.begin() + 1);
+                                            entered_chars.erase(entered_chars.begin() + 1);
+
+                                        }else if(entered_chars[k] == "/" ){
+
+                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) / stod(entered_chars[k+1]));
+                                            entered_chars.erase(entered_chars.begin() + 1);
+                                            entered_chars.erase(entered_chars.begin() + 1);
+
+                                        }
+
+                                    }
+
+                                }
+
+                                text_entered_str = entered_chars[0];
+                                text_entered.setString(text_entered_str);
+                                
                             }
 
                         }
