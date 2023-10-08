@@ -5,8 +5,8 @@
 
 using namespace std;
 
-int* array_additional(int* numbers, int& capacity, int& size_current, string &stopChar);
 bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
+bool Nums_check(string chars[16], int i,  sf::Event event);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator", sf::Style::Titlebar | sf::Style::Close);
@@ -96,16 +96,7 @@ int main() {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 for(int i = 0; i < 16; i++) {
                     if (Click_check(mousePos, box[i].getGlobalBounds())) {
-                        if(chars[i] == "0" ||
-                           chars[i] == "1" ||
-                           chars[i] == "2" ||
-                           chars[i] == "3" ||
-                           chars[i] == "4" ||
-                           chars[i] == "5" || 
-                           chars[i] == "6" ||
-                           chars[i] == "7" ||
-                           chars[i] == "8" ||
-                           chars[i] == "9"){ 
+                        if(Nums_check(chars, i, event)) { 
                             
                             if (entered_chars.size() < 1 
                             || entered_chars.back() == "+"
@@ -186,8 +177,10 @@ int main() {
                                 }
 
                             }else{
+                                 
+                                if(entered_chars.size() >= 3){
 
-                                int count = 0;
+                                    int count = 0;
 
                                 for(int j = 0; j < entered_chars.size(); j++){
 
@@ -208,25 +201,33 @@ int main() {
 
                                         if(entered_chars[k] == "+" ){
 
-                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) + stod(entered_chars[k+1]));
+                                            double result = stoi(entered_chars[k-1]) + stoi(entered_chars[k+1]);
+
+                                            entered_chars[0] = to_string(result);
                                             entered_chars.erase(entered_chars.begin() + 1);
                                             entered_chars.erase(entered_chars.begin() + 1);
 
                                         }else if(entered_chars[k] == "-" ){
 
-                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) - stod(entered_chars[k+1]));
+                                            double result = stoi(entered_chars[k-1]) - stoi(entered_chars[k+1]);
+
+                                            entered_chars[0] = to_string(result);
                                             entered_chars.erase(entered_chars.begin() + 1);
                                             entered_chars.erase(entered_chars.begin() + 1);
 
                                         }else if(entered_chars[k] == "*" ){
 
-                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) * stod(entered_chars[k+1]));
+                                            double result = stoi(entered_chars[k-1]) * stoi(entered_chars[k+1]);
+
+                                            entered_chars[0] = to_string(result);
                                             entered_chars.erase(entered_chars.begin() + 1);
                                             entered_chars.erase(entered_chars.begin() + 1);
 
                                         }else if(entered_chars[k] == "/" ){
 
-                                            entered_chars[0] = to_string(stod(entered_chars[k-1]) / stod(entered_chars[k+1]));
+                                            double result = stoi(entered_chars[k-1]) / stoi(entered_chars[k+1]);
+
+                                            entered_chars[0] = to_string(result);
                                             entered_chars.erase(entered_chars.begin() + 1);
                                             entered_chars.erase(entered_chars.begin() + 1);
 
@@ -238,6 +239,13 @@ int main() {
 
                                 text_entered_str = entered_chars[0];
                                 text_entered.setString(text_entered_str);
+
+
+                                }else{
+
+                                    continue;
+
+                                }
                                 
                             }
 
@@ -247,7 +255,29 @@ int main() {
 
                     }
                 }
+            }else if (event.type == sf::Event::KeyPressed) {
+
+
+                sf::Keyboard::Key key = event.key.code;
+                // Check which key was pressed
+                if (key == sf::Keyboard::Num0 ||
+                    key == sf::Keyboard::Num1 ||
+                    key == sf::Keyboard::Num2 ||
+                    key == sf::Keyboard::Num3 ||
+                    key == sf::Keyboard::Num4 ||
+                    key == sf::Keyboard::Num5 ||
+                    key == sf::Keyboard::Num6 ||
+                    key == sf::Keyboard::Num7 ||
+                    key == sf::Keyboard::Num8 ||
+                    key == sf::Keyboard::Num9 ){
+
+                        int keyNum = key - sf::Keyboard::Num0;
+                        cout << keyNum << endl;
+
+                    }
+
             }
+
 
         }
 
@@ -265,14 +295,39 @@ int main() {
 
         window.display();
     }
-
+    
     return 0;
+    
 }
 
-bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds) {
+bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds){
     if (rectBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
         return true;
     } else {
         return false;
     }
 }
+
+bool Nums_check(string chars[16], int i, sf::Event event) {
+
+    if (chars[i] == "0" ||
+        chars[i] == "1" ||
+        chars[i] == "2" ||
+        chars[i] == "3" ||
+        chars[i] == "4" ||
+        chars[i] == "5" || 
+        chars[i] == "6" ||
+        chars[i] == "7" ||
+        chars[i] == "8" ||
+        chars[i] == "9" ){
+
+        return true;
+
+       }else{
+
+            return false;
+
+       }
+
+}   
+        
