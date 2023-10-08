@@ -6,7 +6,12 @@
 using namespace std;
 
 bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
-bool Nums_check(string chars[16], int i,  sf::Event event);
+bool Nums_check(string chars[16], int i);
+
+bool check_keys(sf::Event event);
+bool check_nums_keyboard(sf::Event event);
+
+void Calculator_Logic(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator", sf::Style::Titlebar | sf::Style::Close);
@@ -95,187 +100,12 @@ int main() {
                 
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 for(int i = 0; i < 16; i++) {
-                    if (Click_check(mousePos, box[i].getGlobalBounds())) {
-                        if(Nums_check(chars, i, event)) { 
-                            
-                            if (entered_chars.size() < 1 
-                            || entered_chars.back() == "+"
-                            || entered_chars.back() == "-"
-                            || entered_chars.back() == "*"
-                            || entered_chars.back() == "/"){
-
-                                entered_chars.push_back(chars[i]);
-                                text_entered_str += chars[i];
-
-                            }else{
-                                    
-                                entered_chars[0+entered_chars.size()-1] += chars[i];
-                                text_entered_str += chars[i];
-
-                            }
-                            text_entered.setString(text_entered_str);
-
-                        }else{
-
-                            if (chars[i] == "C") {
-
-                                entered_chars.clear();
-                                text_entered_str = "";
-                                text_entered.setString("0");
-
-                            }else if (chars[i] == "+") {
-
-                                if (entered_chars.back() != "+" 
-                                && entered_chars.back()!= "-" 
-                                && entered_chars.back()!= "*"
-                                && entered_chars.back()!= "/") {
-
-                                    entered_chars.push_back(chars[i]);
-                                    text_entered_str += " " + chars[i] + " ";
-                                    text_entered.setString(text_entered_str);
-
-                                }
-
-
-                            }else if (chars[i] == "-") {
-
-                                if (entered_chars.back() != "+" 
-                                && entered_chars.back()!= "-" 
-                                && entered_chars.back()!= "*"
-                                && entered_chars.back()!= "/") {
-
-                                    entered_chars.push_back(chars[i]);
-                                    text_entered_str += " " + chars[i] + " ";
-                                    text_entered.setString(text_entered_str);
-
-                                }
-
-                            }else if (chars[i] == "*") {
-
-                                if (entered_chars.back() != "+" 
-                                && entered_chars.back()!= "-" 
-                                && entered_chars.back()!= "*"
-                                && entered_chars.back()!= "/") {
-
-                                    entered_chars.push_back(chars[i]);
-                                    text_entered_str += " " + chars[i] + " ";
-                                    text_entered.setString(text_entered_str);
-
-                                }
-
-                            }else if (chars[i] == "/") {
-
-                                if (entered_chars.back() != "+" 
-                                && entered_chars.back()!= "-" 
-                                && entered_chars.back()!= "*"
-                                && entered_chars.back()!= "/") {
-
-                                    entered_chars.push_back(chars[i]);
-                                    text_entered_str += " " + chars[i] + " ";
-                                    text_entered.setString(text_entered_str);
-
-                                }
-
-                            }else{
-                                 
-                                if(entered_chars.size() >= 3){
-
-                                    int count = 0;
-
-                                for(int j = 0; j < entered_chars.size(); j++){
-
-                                    if(entered_chars[j] == "+" 
-                                    || entered_chars[j] == "-" 
-                                    || entered_chars[j] == "*" 
-                                    || entered_chars[j] == "/"){
-
-                                        count++;
-
-                                    }
-
-                                }
-
-                                for(int j = 0; j < count; j++){
-
-                                    for(int k = 0; k < entered_chars.size(); k++) {
-
-                                        if(entered_chars[k] == "+" ){
-
-                                            double result = stoi(entered_chars[k-1]) + stoi(entered_chars[k+1]);
-
-                                            entered_chars[0] = to_string(result);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-
-                                        }else if(entered_chars[k] == "-" ){
-
-                                            double result = stoi(entered_chars[k-1]) - stoi(entered_chars[k+1]);
-
-                                            entered_chars[0] = to_string(result);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-
-                                        }else if(entered_chars[k] == "*" ){
-
-                                            double result = stoi(entered_chars[k-1]) * stoi(entered_chars[k+1]);
-
-                                            entered_chars[0] = to_string(result);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-
-                                        }else if(entered_chars[k] == "/" ){
-
-                                            double result = stoi(entered_chars[k-1]) / stoi(entered_chars[k+1]);
-
-                                            entered_chars[0] = to_string(result);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-                                            entered_chars.erase(entered_chars.begin() + 1);
-
-                                        }
-
-                                    }
-
-                                }
-
-                                text_entered_str = entered_chars[0];
-                                text_entered.setString(text_entered_str);
-
-
-                                }else{
-
-                                    continue;
-
-                                }
-                                
-                            }
-
-                        }
-
-
+                    if (Click_check(mousePos, box[i].getGlobalBounds()) || check_keys(event)) {
+                 
+                        Calculator_Logic(chars, i, event, entered_chars, text_entered_str, text_entered, solveble);
 
                     }
                 }
-            }else if (event.type == sf::Event::KeyPressed) {
-
-
-                sf::Keyboard::Key key = event.key.code;
-                // Check which key was pressed
-                if (key == sf::Keyboard::Num0 ||
-                    key == sf::Keyboard::Num1 ||
-                    key == sf::Keyboard::Num2 ||
-                    key == sf::Keyboard::Num3 ||
-                    key == sf::Keyboard::Num4 ||
-                    key == sf::Keyboard::Num5 ||
-                    key == sf::Keyboard::Num6 ||
-                    key == sf::Keyboard::Num7 ||
-                    key == sf::Keyboard::Num8 ||
-                    key == sf::Keyboard::Num9 ){
-
-                        int keyNum = key - sf::Keyboard::Num0;
-                        cout << keyNum << endl;
-
-                    }
-
             }
 
 
@@ -308,7 +138,7 @@ bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds){
     }
 }
 
-bool Nums_check(string chars[16], int i, sf::Event event) {
+bool Nums_check(string chars[16], int i) {
 
     if (chars[i] == "0" ||
         chars[i] == "1" ||
@@ -330,4 +160,222 @@ bool Nums_check(string chars[16], int i, sf::Event event) {
        }
 
 }   
+
+bool check_keys(sf::Event event) {
+
+    sf::Keyboard::Key key = event.key.code;
+                // Check which key was pressed
+                if (key == sf::Keyboard::Num0 ||
+                    key == sf::Keyboard::Num1 ||
+                    key == sf::Keyboard::Num2 ||
+                    key == sf::Keyboard::Num3 ||
+                    key == sf::Keyboard::Num4 ||
+                    key == sf::Keyboard::Num5 ||
+                    key == sf::Keyboard::Num6 ||
+                    key == sf::Keyboard::Num7 ||
+                    key == sf::Keyboard::Num8 ||
+                    key == sf::Keyboard::Num9 ||
+                    key == sf::Keyboard::Add ||
+                    key == sf::Keyboard::Subtract ||
+                    key == sf::Keyboard::Multiply ||
+                    key == sf::Keyboard::Divide ||
+                    key == sf::Keyboard::Equal ||
+                    key == sf::Keyboard::C){
+
+                        return true;
+
+                    }else{
+
+                        return false;
+
+                    }
+
+}
         
+bool check_nums_keyboard(sf::Event event){
+
+    if (event.type == sf::Event::KeyPressed) {
+
+        sf::Keyboard::Key key = event.key.code;
+        // Check which key was pressed
+        if (key == sf::Keyboard::Num0 ||
+            key == sf::Keyboard::Num1 ||
+            key == sf::Keyboard::Num2 ||
+            key == sf::Keyboard::Num3 ||
+            key == sf::Keyboard::Num4 ||
+            key == sf::Keyboard::Num5 ||
+            key == sf::Keyboard::Num6 ||
+            key == sf::Keyboard::Num7 ||
+            key == sf::Keyboard::Num8 ||
+            key == sf::Keyboard::Num9 ){
+
+                return true;
+
+            }
+
+    }
+
+    return false; // Add this line
+
+}
+
+void Calculator_Logic(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble){
+
+    if(Nums_check(chars, i) || check_nums_keyboard(event)) { 
+        
+        cout << "Pressed" << endl;
+
+        if (entered_chars.size() < 1 
+        || entered_chars.back() == "+"
+        || entered_chars.back() == "-"
+        || entered_chars.back() == "*"
+        || entered_chars.back() == "/"){
+
+            entered_chars.push_back(chars[i]);
+            text_entered_str += chars[i];
+
+        }else{
+                
+            entered_chars[0+entered_chars.size()-1] += chars[i];
+            text_entered_str += chars[i];
+
+        }
+        text_entered.setString(text_entered_str);
+
+    }else{
+
+        if (chars[i] == "C") {
+
+            entered_chars.clear();
+            text_entered_str = "";
+            text_entered.setString("0");
+
+        }else if (chars[i] == "+") {
+
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
+                text_entered.setString(text_entered_str);
+
+            }
+
+
+        }else if (chars[i] == "-") {
+
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
+                text_entered.setString(text_entered_str);
+
+            }
+
+        }else if (chars[i] == "*") {
+
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
+                text_entered.setString(text_entered_str);
+
+            }
+
+        }else if (chars[i] == "/") {
+
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
+                text_entered.setString(text_entered_str);
+
+            }
+
+        }else{
+                
+            if(entered_chars.size() >= 3){
+
+                int count = 0;
+
+            for(int j = 0; j < entered_chars.size(); j++){
+
+                if(entered_chars[j] == "+" 
+                || entered_chars[j] == "-" 
+                || entered_chars[j] == "*" 
+                || entered_chars[j] == "/"){
+
+                    count++;
+
+                }
+
+            }
+
+            for(int j = 0; j < count; j++){
+
+                for(int k = 0; k < entered_chars.size(); k++) {
+
+                    if(entered_chars[k] == "+" ){
+
+                        double result = stoi(entered_chars[k-1]) + stoi(entered_chars[k+1]);
+
+                        entered_chars[0] = to_string(result);
+                        entered_chars.erase(entered_chars.begin() + 1);
+                        entered_chars.erase(entered_chars.begin() + 1);
+
+                    }else if(entered_chars[k] == "-" ){
+
+                        double result = stoi(entered_chars[k-1]) - stoi(entered_chars[k+1]);
+
+                        entered_chars[0] = to_string(result);
+                        entered_chars.erase(entered_chars.begin() + 1);
+                        entered_chars.erase(entered_chars.begin() + 1);
+
+                    }else if(entered_chars[k] == "*" ){
+
+                        double result = stoi(entered_chars[k-1]) * stoi(entered_chars[k+1]);
+
+                        entered_chars[0] = to_string(result);
+                        entered_chars.erase(entered_chars.begin() + 1);
+                        entered_chars.erase(entered_chars.begin() + 1);
+
+                    }else if(entered_chars[k] == "/" ){
+
+                        double result = stoi(entered_chars[k-1]) / stoi(entered_chars[k+1]);
+
+                        entered_chars[0] = to_string(result);
+                        entered_chars.erase(entered_chars.begin() + 1);
+                        entered_chars.erase(entered_chars.begin() + 1);
+
+                    }
+
+                }
+
+            }
+
+            text_entered_str = entered_chars[0];
+            text_entered.setString(text_entered_str);
+
+
+            }else{
+
+                
+
+            }
+            
+        }
+
+    }
+
+}
