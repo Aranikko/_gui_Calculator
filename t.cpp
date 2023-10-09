@@ -1,16 +1,28 @@
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <vector>
 
-using namespace std;
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Keyboard Input");
 
-int main(int argc, char *argv[]) {
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
 
-    vector<int> v;
+            if (event.type == sf::Event::KeyPressed)
+            {
+                sf::Keyboard::Key key = event.key.code;
+                std::cout << "Key Pressed: " << key << std::endl;
+            }
+        }
 
-    v.push_back(1);
-
-    cout << v[0] << " " << v.size() << endl;
+        window.clear();
+        window.display();
+    }
 
     return 0;
-
 }
