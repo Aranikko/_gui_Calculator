@@ -1,11 +1,10 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 int main()
 {
-    // Create a window with the Titlebar and Close buttons (but no Resize button)
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Fixed Size Window", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Keyboard Input");
 
-    // Main loop
     while (window.isOpen())
     {
         sf::Event event;
@@ -13,17 +12,23 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-            else if (event.type == sf::Event::Resized)
-            {
-                // If the window is resized, set it back to the fixed size
-                window.setSize(sf::Vector2u(800, 600));
-            }
         }
 
-        // Your rendering and game logic goes here...
+        bool is8Pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Num8);
+        bool isShiftPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+
+        if (is8Pressed && isShiftPressed)
+        {
+            std::cout << "Key * is pressed" << std::endl;
+            // Do something when "Shift + 8" is pressed
+        }
+        else if (is8Pressed)
+        {
+            std::cout << "Key 8 is pressed" << std::endl;
+            // Do something when only the "8" key is pressed
+        }
 
         window.clear();
-        // Draw your objects here...
         window.display();
     }
 

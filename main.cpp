@@ -111,6 +111,7 @@ int main() {
                     }
                 }
             } else if (event.type == sf::Event::KeyPressed) { 
+
                 int o = 0;
                 Calculator_Logic_for_Keyboard(chars, o, event, entered_chars, text_entered_str, text_entered, solveble);
             }
@@ -197,24 +198,11 @@ bool check_keys(sf::Event event) {
 }
         
 bool check_nums_keyboard(sf::Event event) {
-     sf::Keyboard::Key key = event.key.code;
-        if (key == sf::Keyboard::Num0 ||
-            key == sf::Keyboard::Num1 ||
-            key == sf::Keyboard::Num2 ||
-            key == sf::Keyboard::Num3 ||
-            key == sf::Keyboard::Num4 ||
-            key == sf::Keyboard::Num5 ||
-            key == sf::Keyboard::Num6 ||
-            key == sf::Keyboard::Num7 ||
-            (key == sf::Keyboard::Num8 && key != 38) ||
-            key == sf::Keyboard::Num9 ){
-
-                return true;
-
-            }
-
-    return false; // Add this line
-
+    sf::Keyboard::Key key = event.key.code;
+    if (key >= sf::Keyboard::Num0 && key <= sf::Keyboard::Num9) {
+        return true;
+    }
+    return false;
 }
 
 void Calculator_Logic_for_mouse(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble){
@@ -386,10 +374,23 @@ void Calculator_Logic_for_Keyboard(
 
     sf::Keyboard::Key key = event.key.code;
 
-    if(check_nums_keyboard(event)) { 
+    bool is8Pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Num8);
+    bool isShiftPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
-       
+    if (is8Pressed && isShiftPressed)  { // check key 34 is *
 
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back("*");
+                text_entered_str += " * ";
+                text_entered.setString(text_entered_str);
+
+            }
+
+        }else if(check_nums_keyboard(event)) { 
         if (entered_chars.size() < 1 
         || entered_chars.back() == "+"
         || entered_chars.back() == "-"
@@ -440,19 +441,6 @@ void Calculator_Logic_for_Keyboard(
 
             }
 
-        }else if (key == sf::Keyboard::Multiply) { // check key 34 is *
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back("*");
-                text_entered_str += " * ";
-                text_entered.setString(text_entered_str);
-
-            }
-
         }else if (key == 52) {
 
             if (entered_chars.back() != "+" 
@@ -466,7 +454,7 @@ void Calculator_Logic_for_Keyboard(
 
             }
 
-        }else{
+        }else if( key == sf::Keyboard::Enter){
                 
             if(entered_chars.size() >= 3){
 
