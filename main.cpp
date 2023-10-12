@@ -8,18 +8,9 @@ using namespace std;
 bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
 bool Nums_check(string chars[16], int i);
 
-bool check_keys(sf::Event event);
 bool check_nums_keyboard(sf::Event event);
 
-void Calculator_Logic_for_mouse(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble);
-
-void Calculator_Logic_for_Keyboard(string chars[16], int &i ,
-                                     sf::Event event,
-                                      vector<string> &entered_chars,
-                                       string &text_entered_str,
-                                        sf::Text &text_entered,
-                                         vector<int> &solveble);
-                                    
+void Calculator_Logic(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(500, 600), "Calculator", sf::Style::Titlebar | sf::Style::Close);
@@ -52,7 +43,7 @@ int main() {
         
     }
 
-    std::string chars[16] = {"0", "/", "1", "2", "3", "*", "4", "5", "6", "-", "7", "8", "9", "+", "C", "="};
+    std::string chars[17] = {"0", "/", "1", "2", "3", "*", "4", "5", "6", "-", "7", "8", "9", "+", "C", "=", ""};
     sf::Text texts[16];
     for(int i = 0; i < 16; i++) {
         
@@ -107,13 +98,14 @@ int main() {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
                 for(int i = 0; i < 16; i++) {
                     if (Click_check(mousePos, box[i].getGlobalBounds())) {
-                        Calculator_Logic_for_mouse(chars, i, event, entered_chars, text_entered_str, text_entered, solveble);
+                        Calculator_Logic(chars, i, event, entered_chars, text_entered_str, text_entered, solveble);
                     }
                 }
             } else if (event.type == sf::Event::KeyPressed) { 
 
-                int o = 0;
-                Calculator_Logic_for_Keyboard(chars, o, event, entered_chars, text_entered_str, text_entered, solveble);
+                int o = 16;
+                Calculator_Logic(chars, o, event, entered_chars, text_entered_str, text_entered, solveble);
+
             }
         }
 
@@ -166,36 +158,6 @@ bool Nums_check(string chars[16], int i) {
        }
 
 }   
-
-bool check_keys(sf::Event event) {
-     sf::Keyboard::Key key = event.key.code;
-                // Check which key was pressed
-                if (key == sf::Keyboard::Num0 ||
-                    key == sf::Keyboard::Num1 ||
-                    key == sf::Keyboard::Num2 ||
-                    key == sf::Keyboard::Num3 ||
-                    key == sf::Keyboard::Num4 ||
-                    key == sf::Keyboard::Num5 ||
-                    key == sf::Keyboard::Num6 ||
-                    key == sf::Keyboard::Num7 ||
-                    key == sf::Keyboard::Num8 ||
-                    key == sf::Keyboard::Num9 ||
-                    key == sf::Keyboard::Add ||
-                    key == sf::Keyboard::Subtract ||
-                    key == sf::Keyboard::Multiply ||
-                    key == sf::Keyboard::Divide ||
-                    key == sf::Keyboard::Equal ||
-                    key == sf::Keyboard::C){
-
-                        return true;
-
-                    }else{
-
-                        return false;
-
-                    }
-
-}
         
 bool check_nums_keyboard(sf::Event event) {
     sf::Keyboard::Key key = event.key.code;
@@ -205,256 +167,150 @@ bool check_nums_keyboard(sf::Event event) {
     return false;
 }
 
-void Calculator_Logic_for_mouse(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble){
-
-    if(Nums_check(chars, i)) { 
-        
-        if (entered_chars.size() < 1 
-        || entered_chars.back() == "+"
-        || entered_chars.back() == "-"
-        || entered_chars.back() == "*"
-        || entered_chars.back() == "/"){
-
-            entered_chars.push_back(chars[i]);
-            text_entered_str += chars[i];
-
-        }else{
-                
-            entered_chars[0+entered_chars.size()-1] += chars[i];
-            text_entered_str += chars[i];
-
-        }
-        text_entered.setString(text_entered_str);
-
-    }else{
-
-        if (chars[i] == "C") {
-
-            entered_chars.clear();
-            text_entered_str = "";
-            text_entered.setString("0");
-
-        }else if (chars[i] == "+") {
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back(chars[i]);
-                text_entered_str += " " + chars[i] + " ";
-                text_entered.setString(text_entered_str);
-
-            }
-
-
-        }else if (chars[i] == "-") {
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back(chars[i]);
-                text_entered_str += " " + chars[i] + " ";
-                text_entered.setString(text_entered_str);
-
-            }
-
-        }else if (chars[i] == "*") {
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back(chars[i]);
-                text_entered_str += " " + chars[i] + " ";
-                text_entered.setString(text_entered_str);
-
-            }
-
-        }else if (chars[i] == "/") {
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back(chars[i]);
-                text_entered_str += " " + chars[i] + " ";
-                text_entered.setString(text_entered_str);
-
-            }
-
-        }else{
-                
-            if(entered_chars.size() >= 3){
-
-                int count = 0;
-
-            for(int j = 0; j < entered_chars.size(); j++){
-
-                if(entered_chars[j] == "+" 
-                || entered_chars[j] == "-" 
-                || entered_chars[j] == "*" 
-                || entered_chars[j] == "/"){
-
-                    count++;
-
-                }
-
-            }
-
-            for(int j = 0; j < count; j++){
-
-                for(int k = 0; k < entered_chars.size(); k++) {
-
-                    if(entered_chars[k] == "+" ){
-
-                        double result = stoi(entered_chars[k-1]) + stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
-
-                    }else if(entered_chars[k] == "-" ){
-
-                        double result = stoi(entered_chars[k-1]) - stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
-
-                    }else if(entered_chars[k] == "*" ){
-
-                        double result = stoi(entered_chars[k-1]) * stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
-
-                    }else if(entered_chars[k] == "/" ){
-
-                        double result = stoi(entered_chars[k-1]) / stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
-
-                    }
-
-                }
-
-            }
-
-            text_entered_str = entered_chars[0];
-            text_entered.setString(text_entered_str);
-
-
-            }else{
-
-                
-
-            }
-            
-        }
-
-    }
-
-}
-
-void Calculator_Logic_for_Keyboard(
-                                    string chars[16], int &i ,
-                                     sf::Event event,
-                                      vector<string> &entered_chars,
-                                       string &text_entered_str,
-                                        sf::Text &text_entered,
-                                         vector<int> &solveble){
+void Calculator_Logic(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble){
 
     sf::Keyboard::Key key = event.key.code;
 
     bool is8Pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Num8);
     bool isShiftPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
-    if (is8Pressed && isShiftPressed)  { // check key 34 is *
-
-            if (entered_chars.back() != "+" 
-            && entered_chars.back()!= "-" 
-            && entered_chars.back()!= "*"
-            && entered_chars.back()!= "/") {
-
-                entered_chars.push_back("*");
-                text_entered_str += " * ";
-                text_entered.setString(text_entered_str);
-
-            }
-
-        }else if(check_nums_keyboard(event)) { 
-        if (entered_chars.size() < 1 
-        || entered_chars.back() == "+"
-        || entered_chars.back() == "-"
-        || entered_chars.back() == "*"
-        || entered_chars.back() == "/"){
-
-            entered_chars.push_back(to_string(key - sf::Keyboard::Num0));
-            text_entered_str += to_string(key - sf::Keyboard::Num0);
-
-        }else{
-                
-            entered_chars[0+entered_chars.size()-1] += to_string(key - sf::Keyboard::Num0);
-            text_entered_str += to_string(key - sf::Keyboard::Num0);
-
-        }
-        text_entered.setString(text_entered_str);
-
-    }else{
-
-        if (key == sf::Keyboard::C) {
+    if (chars[i] == "C" || key == sf::Keyboard::C) {
 
             entered_chars.clear();
             text_entered_str = "";
             text_entered.setString("0");
 
-        }else if (key == 55) { // check key 55 is +
+        }else if (chars[i] == "+" || key == 55) {
 
             if (entered_chars.back() != "+" 
-                && entered_chars.back()!= "-" 
-                && entered_chars.back()!= "*"
-                && entered_chars.back()!= "/") {
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                
+
+                if(event.type == sf::Event::KeyPressed) {
 
                     entered_chars.push_back("+");
                     text_entered_str += " + ";
                     text_entered.setString(text_entered_str);
 
+                    cout << "pressed" << endl;
+
+                }else{
+
+                    entered_chars.push_back(chars[i]);
+                    text_entered_str += " " + chars[i] + " ";
+                    text_entered.setString(text_entered_str);
+
+                }
+
             }
-        }else if (key == 56) {
+
+
+        }else if (chars[i] == "-" || key == 56) {
 
             if (entered_chars.back() != "+" 
             && entered_chars.back()!= "-" 
             && entered_chars.back()!= "*"
             && entered_chars.back()!= "/") {
 
-                entered_chars.push_back("-");
-                text_entered_str += " - ";
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
                 text_entered.setString(text_entered_str);
+
+                if(event.type == sf::Event::KeyPressed) {
+
+                    entered_chars.push_back("-");
+                    text_entered_str += " - ";
+                    text_entered.setString(text_entered_str);
+
+                }
 
             }
 
-        }else if (key == 52) {
+        }else if (chars[i] == "*" || (is8Pressed && isShiftPressed)) {
 
             if (entered_chars.back() != "+" 
             && entered_chars.back()!= "-" 
             && entered_chars.back()!= "*"
             && entered_chars.back()!= "/") {
 
-                entered_chars.push_back("/");
-                text_entered_str += " / ";
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
                 text_entered.setString(text_entered_str);
+
+                if(event.type == sf::Event::KeyPressed) {
+
+                    entered_chars.push_back("*");
+                    text_entered_str += " * ";
+                    text_entered.setString(text_entered_str);
+
+                }
 
             }
 
-        }else if( key == sf::Keyboard::Enter){
+        }else if (chars[i] == "/" || key == 52) {
+
+            if (entered_chars.back() != "+" 
+            && entered_chars.back()!= "-" 
+            && entered_chars.back()!= "*"
+            && entered_chars.back()!= "/") {
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += " " + chars[i] + " ";
+                text_entered.setString(text_entered_str);
+
+                if(event.type == sf::Event::KeyPressed) {
+
+                    entered_chars.push_back("/");
+                    text_entered_str += " / ";
+                    text_entered.setString(text_entered_str);
+
+                }
+
+            }
+
+        }else{
+
+            if(Nums_check(chars, i) || check_nums_keyboard(event)) { 
+        
+                if (entered_chars.size() < 1 
+                || entered_chars.back() == "+"
+                || entered_chars.back() == "-"
+                || entered_chars.back() == "*"
+                || entered_chars.back() == "/"){
+
+            if (event.type == sf::Event::KeyPressed){
+
+                entered_chars.push_back(to_string(key - sf::Keyboard::Num0));
+                text_entered_str += to_string(key - sf::Keyboard::Num0);
+
+            }else{
+
+                entered_chars.push_back(chars[i]);
+                text_entered_str += chars[i];
+
+            }
+
+        }else{
+
+            if(event.type == sf::Event::KeyPressed){
+
+                entered_chars[0+entered_chars.size()-1] += to_string(key - sf::Keyboard::Num0);
+                text_entered_str += to_string(key - sf::Keyboard::Num0);
+
+            }else{
+
+                entered_chars[0+entered_chars.size()-1] += chars[i];
+                text_entered_str += chars[i];
+
+            }
+
+        }
+        text_entered.setString(text_entered_str);
+
+    }else if(key == sf::Keyboard::Enter || chars[i] == "="){
                 
             if(entered_chars.size() >= 3){
 
@@ -479,35 +335,51 @@ void Calculator_Logic_for_Keyboard(
 
                     if(entered_chars[k] == "+" ){
 
-                        double result = stoi(entered_chars[k-1]) + stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
+                        try {
+                            double result = stod(entered_chars[k-1]) + stod(entered_chars[k+1]);
+                            entered_chars[0] = to_string(result);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                        } catch (const std::invalid_argument& e) {
+                            cout << e.what() << endl;
+                            // Handle the exception, e.g., display an error message or take appropriate action
+                        }
 
                     }else if(entered_chars[k] == "-" ){
 
-                        double result = stoi(entered_chars[k-1]) - stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
+                        try {
+                            double result = stod(entered_chars[k-1]) - stod(entered_chars[k+1]);
+                            entered_chars[0] = to_string(result);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                        } catch (const std::invalid_argument& e) {
+                            cout << e.what() << endl;
+                            // Handle the exception, e.g., display an error message or take appropriate action
+                        }
 
                     }else if(entered_chars[k] == "*" ){
 
-                        double result = stoi(entered_chars[k-1]) * stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
+                        try {
+                            double result = stod(entered_chars[k-1]) * stod(entered_chars[k+1]);
+                            entered_chars[0] = to_string(result);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                        } catch (const std::invalid_argument& e) {
+                            cout << e.what() << endl;
+                            // Handle the exception, e.g., display an error message or take appropriate action
+                        }
 
                     }else if(entered_chars[k] == "/" ){
 
-                        double result = stoi(entered_chars[k-1]) / stoi(entered_chars[k+1]);
-
-                        entered_chars[0] = to_string(result);
-                        entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
+                        try {
+                            double result = stod(entered_chars[k-1]) / stod(entered_chars[k+1]);
+                            entered_chars[0] = to_string(result);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                            entered_chars.erase(entered_chars.begin() + 1);
+                        } catch (const std::invalid_argument& e) {
+                            cout << e.what() << endl;
+                            // Handle the exception, e.g., display an error message or take appropriate action
+                        }
 
                     }
 
