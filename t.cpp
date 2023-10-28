@@ -1,28 +1,17 @@
-#include <SFML/Graphics.hpp>
+#include <charconv>
 #include <iostream>
+#include <vector>
+using namespace std;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Keyboard Input");
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
+    string num1 = "1";
+    string num2 = "1";
 
-            if (event.type == sf::Event::KeyPressed)
-            {
-                sf::Keyboard::Key key = event.key.code;
-                std::cout << "Key Pressed: " << key << std::endl;
-            }
-        }
+    float numFloat = static_cast<float>(stod(num1)) / static_cast<float>(stoi(num2));
 
-        window.clear();
-        window.display();
-    }
+    cout << to_char(numFloat) << endl;
 
     return 0;
 }
