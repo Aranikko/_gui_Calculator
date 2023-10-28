@@ -6,12 +6,11 @@ using namespace std;
 int main()
 {
 
-    string num1 = "1";
-    string num2 = "1";
+    string s_num1 = "-920,4454", s_num2 = "3.654354";
 
-    float numFloat = static_cast<float>(stod(num1)) / static_cast<float>(stoi(num2));
+    double num1 = stod(s_num1), num2 = stod(s_num2);
 
-    cout << to_char(numFloat) << endl;
+    cout << num1 + num2 << endl;
 
     return 0;
 }

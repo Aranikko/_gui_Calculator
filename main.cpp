@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -231,28 +232,62 @@ void Calculator_Logic(string chars[16], int &i, sf::Event event, vector<string> 
             for (int i = 0; i < count; i++) {
                 for (int j = 0; j < entered_chars.size(); j++) {
                     if (entered_chars[j] == "+") {
-                        entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) + stod(entered_chars[j + 1])));
+                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+
+                            entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) + stod(entered_chars[j + 1])));
+
+                        }else{
+
+                            entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) + stod(entered_chars[j + 1])));
+
+                        }
+                        
                         entered_chars.erase(entered_chars.begin() + 1);
                         entered_chars.erase(entered_chars.begin() + 1);
                         break;
                     } else if (entered_chars[j] == "-") {
-                        entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) - stod(entered_chars[j + 1])));
+                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+
+                            entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) - stod(entered_chars[j + 1])));
+
+                        }else{
+
+                            entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) - stod(entered_chars[j + 1])));
+
+                        }
                         entered_chars.erase(entered_chars.begin() + 1);
-                        entered_chars.erase(entered_chars.begin() + 1);
+                        entered_chars.erase(entered_chars.begin() + 1); 
                         break;
                     } else if (entered_chars[j] == "*") {
-                        entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) * stod(entered_chars[j + 1])));
+                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+
+                            entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) * stod(entered_chars[j + 1])));
+
+                        }else{
+
+                            entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) * stod(entered_chars[j + 1])));
+
+                        }
                         entered_chars.erase(entered_chars.begin() + 1);
                         entered_chars.erase(entered_chars.begin() + 1);
                         break;
                     } else if (entered_chars[j] == "/") {
-                        entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) / stod(entered_chars[j + 1])));
+                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+
+                            entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) / stod(entered_chars[j + 1])));
+
+                        }else{
+
+                            entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) / stod(entered_chars[j + 1])));
+
+                        }
                         entered_chars.erase(entered_chars.begin() + 1);
                         entered_chars.erase(entered_chars.begin() + 1);
                         break;
                     }
                 }
             }
+
             text_entered_str = entered_chars[0];
             text_entered.setString(text_entered_str);
         }
