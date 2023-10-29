@@ -10,6 +10,7 @@ bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds);
 bool Nums_check(string chars[16], int i);
 
 bool check_nums_keyboard(sf::Event event);
+bool check_Float(vector<string> arr, int i);
 
 void Calculator_Logic(string chars[16], int &i , sf::Event event, vector<string> &entered_chars, string &text_entered_str, sf::Text &text_entered, vector<int> &solveble);
 
@@ -137,6 +138,15 @@ bool Click_check(sf::Vector2i mousePos, sf::FloatRect rectBounds){
     }
 }
 
+bool check_Float(vector<string> arr, int i) {
+    for(char const &c : arr[i]) {
+        if(c == '.') {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool Nums_check(string chars[16], int i) {
 
     if (chars[i] == "0" ||
@@ -232,7 +242,9 @@ void Calculator_Logic(string chars[16], int &i, sf::Event event, vector<string> 
             for (int i = 0; i < count; i++) {
                 for (int j = 0; j < entered_chars.size(); j++) {
                     if (entered_chars[j] == "+") {
-                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+
+                        
+                        if(check_Float(entered_chars, j - 1) && check_Float(entered_chars, j + 1)){
 
                             entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) + stod(entered_chars[j + 1])));
 
@@ -246,7 +258,7 @@ void Calculator_Logic(string chars[16], int &i, sf::Event event, vector<string> 
                         entered_chars.erase(entered_chars.begin() + 1);
                         break;
                     } else if (entered_chars[j] == "-") {
-                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+                        if(check_Float(entered_chars, j - 1) && check_Float(entered_chars, j + 1)){
 
                             entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) - stod(entered_chars[j + 1])));
 
@@ -254,12 +266,12 @@ void Calculator_Logic(string chars[16], int &i, sf::Event event, vector<string> 
 
                             entered_chars[0] = to_string(static_cast<float>(stod(entered_chars[j - 1]) - stod(entered_chars[j + 1])));
 
-                        }
+                        }                         
                         entered_chars.erase(entered_chars.begin() + 1);
                         entered_chars.erase(entered_chars.begin() + 1); 
                         break;
                     } else if (entered_chars[j] == "*") {
-                        if (fmod(stod(entered_chars[j - 1]), stod(entered_chars[j + 1])) == 0.0){
+                        if(check_Float(entered_chars, j - 1) && check_Float(entered_chars, j + 1)){
 
                             entered_chars[0] = to_string(static_cast<int>(stod(entered_chars[j - 1]) * stod(entered_chars[j + 1])));
 
